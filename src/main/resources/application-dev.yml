@@ -1,0 +1,58 @@
+web:
+  upload-path: F:/Server Files/petrobest/imgs/var/www/html/upload/
+  front-path: F:/Server Files/petrobest/imgs/var/www/html/upload/   # PORTAL_HOME 为前端项目部署根目录 petrobest为项目名
+
+portal:
+  apiPrefix: /api  #前端调用后端api时的url前缀
+  avatarPath: /ava  #前端头像图片资源的映射规则\
+
+logging:
+  level:
+    com.petrobest: debug #sql打印
+#  config: classpath:logback/logback-spring-dev.xml
+
+spring:
+  datasource:
+    url: jdbc:mysql://39.104.78.213:3306/bestms?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-timeout: 30000
+      auto-commit: true
+      max-lifetime: 1800000
+      pool-name: HikariCP
+      minimum-idle: 5
+      connection-test-query: SELECT 1
+      idle-timeout: 30000
+      maximum-pool-size: 15
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 10000
+    password:
+    pool:
+        # 连接池中的最大空闲连接
+       jedis:
+          max-idle: 8
+        # 连接池中的最小空闲连接
+          min-idle: 10
+        # 连接池最大连接数（使用负值表示没有限制）
+          max-active: 100
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+          max-wait: -1
+  mvc:
+    static-path-pattern: ${portal.avatarPath}/**   #前端图片映射规则
+  resources:
+    static-locations: file:${web.upload-path},file:${web.front-path} #映射文件系统中的绝对路径
+
+  rabbitmq:
+      host: 39.104.78.213
+      port: 5672
+      username: petrobest
+      password: petrobest
+
+  devtools:
+      restart:
+        enabled: true

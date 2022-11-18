@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petrobest.pbmsapp.project.dao.ProjectDao">
+    <resultMap id="BaseResultMap" type="com.petrobest.pbmsapp.project.domain.ProjectDO">
+        <id column="id" property="id"/>
+        <result column="pro_id" property="proId"/>
+        <result column="pro_name" property="proName"/>
+        <result column="pro_mgr" property="proMgr"/>
+        <result column="customer_name" property="customerName"/>
+        <result column="pro_debugger" property="proDebugger"/>
+        <result column="pro_drawing_id" property="proDrawingId"/>
+        <result column="device_id" property="deviceId"/>
+        <result column="device_name" property="deviceName"/>
+        <result column="device_comment" property="deviceComment"/>
+        <result column="device_designer" property="deviceDesigner"/>
+        <result column="device_produce_date" property="deviceProduceDate"/>
+        <result column="pro_lng" property="proLng"/>
+        <result column="pro_lat" property="proLat"/>
+        <result column="pro_addr" property="proAddr"/>
+        <result column="pro_province" property="proProvince"/>
+        <result column="pro_city" property="proCity"/>
+        <result column="pro_district" property="proDistrict"/>
+        <result column="pro_detail" property="proDetail"/>
+        <result column="to_monitor_center" property="toMonitorCenter"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+
+        <collection property="projectDeviceDOs" ofType="com.petrobest.pbmsapp.project.domain.ProjectDeviceDO" javaType="ArrayList">
+            <id column="d_id" property="id"/>
+            <result column="d_pro_id" property="proId"/>
+            <result column="d_device_type" property="deviceType"/>
+            <result column="d_device_serial" property="deviceSerial"/>
+            <result column="d_device_password" property="devicePassword"/>
+            <result column="d_device_debug_user" property="deviceDebugUser"/>
+            <result column="d_device_debug_password" property="deviceDebugPassword"/>
+            <result column="d_device_mobile" property="deviceMobile"/>
+            <result column="d_device_apply_time" property="deviceApplyTime"/>
+            <result column="d_create_time" property="createTime"/>
+            <result column="d_modify_time" property="modifyTime"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="findOne" resultMap="BaseResultMap">
+        SELECT
+            p.ID,
+            p.PRO_ID,
+            p.PRO_NAME,
+            p.PRO_MGR,
+            p.CUSTOMER_NAME,
+            p.PRO_DEBUGGER,
+            p.PRO_DRAWING_ID,
+            p.DEVICE_ID,
+            p.DEVICE_NAME,
+            p.DEVICE_COMMENT,
+            p.DEVICE_DESIGNER,
+            p.DEVICE_PRODUCE_DATE,
+            p.PRO_LNG,
+            p.PRO_LAT,
+            p.PRO_ADDR,
+            p.PRO_PROVINCE,
+            p.PRO_CITY,
+            p.PRO_DISTRICT,
+            p.PRO_DETAIL,
+            p.TO_MONITOR_CENTER,
+            p.CREATE_TIME,
+            p.MODIFY_TIME,
+
+            pd.ID as d_ID,
+            pd.PRO_ID as d_PRO_ID,
+            pd.DEVICE_TYPE as d_DEVICE_TYPE,
+            pd.DEVICE_SERIAL as d_DEVICE_SERIAL,
+            pd.DEVICE_PASSWORD as d_DEVICE_PASSWORD,
+            pd.DEVICE_DEBUG_USER as d_DEVICE_DEBUG_USER,
+            pd.DEVICE_DEBUG_PASSWORD as d_DEVICE_DEBUG_PASSWORD,
+            pd.DEVICE_MOBILE as d_DEVICE_MOBILE,
+            pd.DEVICE_APPLY_TIME as d_DEVICE_APPLY_TIME,
+            pd.CREATE_TIME as d_CREATE_TIME,
+            pd.MODIFY_TIME as d_MODIFY_TIME
+        FROM pro_project p
+        LEFT JOIN pro_project_device pd
+        ON pd.pro_id = p.pro_id
+        WHERE p.id=#{projectDO.id}
+    </select>
+
+
+</mapper>

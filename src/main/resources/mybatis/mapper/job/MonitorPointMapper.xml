@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petrobest.pbmsapp.fbox.dao.MonitorPointDao">
+    <resultMap id="BaseResultMap" type="com.petrobest.pbmsapp.fbox.domain.MonitorPointDO">
+        <id column="ID" jdbcType="INTEGER" property="id"/>
+        <result column="DEVICE_ID" jdbcType="VARCHAR" property="deviceId"/>
+        <result column="RECEIVE_TIME" jdbcType="TIMESTAMP" property="receiveTime"/>
+        <result column="RECEIVE_DATA" jdbcType="VARCHAR" property="receiveData"/>
+        <result column="CREATE_DATA" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <insert id="save" parameterType="com.petrobest.pbmsapp.fbox.domain.MonitorPointDO">
+        insert into serv_monitorpoint (id, device_id, receive_time, receive_data, create_time) values
+        (
+        #{id},
+        #{deviceId},
+        #{receiveTime},
+        #{receiveData},
+        #{createTime}
+        )
+
+    </insert>
+    <insert id="batchSave" parameterType="java.util.List">
+        insert into serv_monitorpoint (id, device_id, receive_time, receive_data, create_time) values
+        <foreach collection="list" item="mp" index="index" separator=",">
+            (
+            #{mp.id},
+            #{mp.deviceId},
+            #{mp.receiveTime},
+            #{mp.receiveData},
+            #{mp.createTime}
+            )
+        </foreach>
+
+    </insert>
+
+
+</mapper>

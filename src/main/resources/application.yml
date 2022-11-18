@@ -1,0 +1,85 @@
+server:
+  port: 8802
+
+spring:
+  profiles:
+    active: dev
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss  #默认为timestamp
+    time-zone: Asia/Shanghai
+#  quartz:
+#    properties:
+#      org:
+#        quartz:
+#           scheduler:
+#               instanceName: clusteredScheduler
+#               instanceId: AUTO
+#           jobStore:
+#               class: org.quartz.impl.jdbcjobstore.JobStoreTX
+#               driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+#               tablePrefix: QRTZ_
+#               isClustered: true
+#               clusterCheckinInterval: 10000
+#               useProperties: false
+#           threadPool:
+#               class: org.quartz.simpl.SimpleThreadPool
+#               threadCount: 10
+#               threadPriority: 5
+#               threadsInheritContextClassLoaderOfInitializingThread: true
+#    #数据库方式
+#    job-store-type: jdbc
+
+
+fbox:
+  topicPrefix: Topic/flexem/fbox/   #Topic/flexem/fbox/{boxid}/system/{}
+  topicSuffix: /system/
+  pubTopic: MonitorData,Status,Taglist,,Topiclist #盒子的推送主题
+  subTopic: WriteData,Pause,Reboot,MDataPubNow,MDataPubCycle,MDPCS,GetInfo #盒子订阅的主题
+
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mybatis/**/**/*Mapper.xml
+  type-aliases-package: com.petrobest.pbmsapp.**.domain
+
+mybatis-plus:
+  mapper-locations: classpath:mybatis/**/**/*Mapper.xml
+  type-aliases-package: com.petrobest.pbmsapp.**.domain
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+  #      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+  global-config:
+    db-config:
+      id-type: id_worker_str
+      field-strategy: not_empty
+      db-type: mysql
+
+security:
+  shiro:
+    loginUrl: /doLogin   # 登录界面
+    unauthorizedUrl: /403  # 没权限跳转URL
+    #    logoutUrl: /doLogout #登出接口
+    #    successUrl: /home  #登录成功跳转url
+    globalSessionTimeout: 30  # 登录过期时长 单位：分钟
+    filter:
+      anon:   # 不需要Shiro拦截的请求URL
+        - /js/**
+        - /css/**
+        - /ws/**        #websocket
+        - /ava/**         #图片映射
+        - /doLogin          #登录验证接口
+        - /captcha    #验证码
+      user:   # user拦截器，需要Shiro拦截的请求URL
+        - /**
+
+websocket:
+  endpoints:
+    - /ws
+  destinationPrefixes:
+    - /topic
+    - /user
+  appDestinationPrefix: /app/
+  userDestinationPrefix: /user/

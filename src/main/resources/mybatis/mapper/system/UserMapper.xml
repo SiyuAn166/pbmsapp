@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petrobest.pbmsapp.system.dao.UserDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.petrobest.pbmsapp.system.domain.UserDO">
+        <id column="user_id" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="fullname" property="fullname"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="email" property="email"/>
+        <result column="mobile" property="mobile"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="last_login_time" property="lastLoginTime"/>
+        <result column="sex" property="sex"/>
+        <result column="theme" property="theme"/>
+        <result column="avatar" property="avatar"/>
+        <result column="description" property="description"/>
+        <collection property="roles" ofType="com.petrobest.pbmsapp.system.domain.RoleDO" javaType="ArrayList">
+            <id column="role_id" property="roleId"/>
+            <result column="role_name" property="roleName"/>
+            <result column="remark" property="remark"/>
+            <result column="create_time" property="createTime"/>
+            <result column="modify_time" property="modifyTime"/>
+            <result column="default_checked" property="defaultChecked"/>
+        </collection>
+    </resultMap>
+
+    <sql id="base_field">
+        u.user_id as userId,
+        u.username,
+        u.password,
+        u.fullname,
+        u.dept_id as deptId,
+        u.email,
+        u.mobile,
+        u.status,
+        u.create_time as createTime,
+        u.modify_time as modifyTime,
+        u.last_login_time as lastLoginTime,
+        u.sex,
+        u.theme,
+        u.avatar,
+        u.description
+    </sql>
+
+    <select id="listUserWithRole" resultType="map" parameterType="com.petrobest.pbmsapp.system.domain.UserDO">
+        select
+        <include refid="base_field"/>,GROUP_CONCAT(r.ROLE_NAME) as roleName
+        from sys_user u
+        LEFT join sys_user_role ur on u.USER_ID=ur.USER_ID
+        left join sys_role r on ur.ROLE_ID = r.ROLE_ID
+        <where>
+            <if test="userDO.username != null">
+                u.username like concat(#{userDO.username},"%")
+            </if>
+        </where>
+        GROUP BY u.username
+    </select>
+    <select id="listUserWithRoleDO" resultMap="BaseResultMap" parameterType="com.petrobest.pbmsapp.system.domain.UserDO">
+        select
+        u.user_id,
+        u.username,
+        u.password,
+        u.fullname,
+        u.dept_id,
+        u.email,
+        u.mobile,
+        u.status,
+        u.create_time,
+        u.modify_time,
+        u.last_login_time,
+        u.sex,
+        u.theme,
+        u.avatar,
+        u.description
+        ,r.role_id,r.role_name,r.remark,r.create_time,r.modify_time,r.default_checked
+        from sys_user u
+        LEFT join sys_user_role ur on u.USER_ID=ur.USER_ID
+        left join sys_role r on ur.ROLE_ID = r.ROLE_ID
+        <where>
+            <if test="userDO.username != null">
+                u.username like concat(#{userDO.username},"%")
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/websocket/sockjs.min.js"></script>
+    <script src="js/websocket/stomp.min.js"></script>
+    <script src="js/jquery-3.4.0.min.js"></script>
+</head>
+<body>
+123
+
+<input type="button" value="login" onclick="sub()"/>
+<input type="button" value="login2" onclick="rr()"/>
+<input type="button" value="login3" onclick="login()"/>
+<input type="button" value="logout" onclick="logout()"/>
+<script>
+
+    function logout() {
+        $.ajax({
+            url: "/doLogout",
+            type: "POST",
+            success: function (data) {
+                console.log(data)
+
+            }
+        });
+    }
+
+    function login() {
+        $.ajax({
+            url: "/doLogin",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "username": "admin2",
+                "password": "admin1"
+            }),
+            success: function (data) {
+                console.log(data)
+
+            }
+        });
+    }
+
+    function sub() {
+        $.ajax({
+            url: "/system/user/save",
+            type: "POST",
+            traditional: true,
+            data: {
+                "userId": "1126767980377141250",
+                "username": "admin2",
+                "password": "678213445",
+                "roleIds": ["1126377216543322113", "1126771236734103553"]
+            },
+            success: function (data) {
+                console.log(data)
+
+            }
+        });
+    }
+
+    function rr() {
+        $.ajax({
+            url: "/system/role/save",
+            type: "POST",
+            traditional: true,
+            data: {
+                "roleId": "1126377216543322113",
+                "resourceIds": ["1126721160355516418"]
+            },
+            success: function (data) {
+                console.log(data)
+
+            }
+        });
+    }
+
+    $(function () {
+        connect();
+    });
+
+    function connect() {
+        var sock = new SockJS("/endpointChat");
+        var stomp = Stomp.over(sock);
+        stomp.debug = function () {
+        }; //关闭控制台的打印，默认为打开
+        stomp.connect('guest', 'guest', function (frame) {
+            stomp.subscribe("Topic/flexem/fbox/300218020188/system/MonitorData", handleNotification);
+        });
+    }
+
+    function handleNotification(message) {
+        var msg = JSON.parse(message.body);
+        // var payload = JSON.parse(msg.payload);
+        // console.log(payload);
+        // v.tableData = payload.Data; //vue渲染数据
+        // getdata(payload);
+        // $("#topic").text(payload.time);
+        // $("#topic").text(payload.Data[0].name +":" +payload.Data[0].value);
+        // console.log(payload)
+        console.log(msg)
+    }
+</script>
+</body>
+</html>

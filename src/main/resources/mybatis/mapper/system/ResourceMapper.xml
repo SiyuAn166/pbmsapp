@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petrobest.pbmsapp.system.dao.ResourceDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.petrobest.pbmsapp.system.domain.ResourceDO">
+        <id column="resource_id" property="resourceId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="resource_name" property="resourceName"/>
+        <result column="url" property="url"/>
+        <result column="perms" property="perms"/>
+        <result column="icon" property="icon"/>
+        <result column="type" property="type"/>
+        <result column="order_num" property="orderNum"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+    <sql id="base_field">
+        resource_id,parent_id,resource_name,url, perms,icon,type,order_num,create_time,modify_time
+    </sql>
+
+    <select id="listByUserId" resultType="com.petrobest.pbmsapp.system.domain.ResourceDO">
+        SELECT
+        r.resource_id,r.parent_id,r.resource_name,r.url, r.perms,r.icon,r.type,r.order_num,r.create_time,r.modify_time
+        from sys_resource r
+
+        left join sys_role_resource rr
+        on r.resource_id=rr.resource_id
+
+        left join sys_user_role ur
+        on rr.role_id=ur.role_id
+
+        WHERE ur.user_id=#{userId}
+    </select>
+
+    <select id="listByUsername" resultType="com.petrobest.pbmsapp.system.domain.ResourceDO">
+        SELECT
+        r.resource_id,r.parent_id,r.resource_name,r.url, r.perms,r.icon,r.type,r.order_num,r.create_time,r.modify_time
+        from sys_resource r
+
+        left join sys_role_resource rr
+        on r.resource_id=rr.resource_id
+
+        left join sys_user_role ur
+        on rr.role_id=ur.role_id
+
+        left join sys_user u
+        on u.user_id = ur.user_id
+
+        WHERE u.username=#{username}
+    </select>
+
+    <select id="listPermsByUsername" resultType="java.lang.String">
+        SELECT distinct r.PERMS from sys_resource r
+
+        left join sys_role_resource rr on r.RESOURCE_ID=rr.RESOURCE_ID
+
+        left join sys_user_role ur on rr.ROLE_ID = ur.ROLE_ID
+
+        left join sys_user u  on ur.USER_ID = u.USER_ID
+
+        where u.USERNAME = #{username}
+    </select>
+
+
+</mapper>

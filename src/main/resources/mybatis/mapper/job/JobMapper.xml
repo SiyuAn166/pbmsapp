@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petrobest.pbmsapp.quartz.dao.JobDao">
+    <resultMap id="BaseResultMap" type="com.petrobest.pbmsapp.quartz.domain.Job">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="JOB_ID" jdbcType="INTEGER" property="jobId"/>
+        <result column="BEAN_NAME" jdbcType="VARCHAR" property="beanName"/>
+        <result column="METHOD_NAME" jdbcType="VARCHAR" property="methodName"/>
+        <result column="PARAMS" jdbcType="VARCHAR" property="params"/>
+        <result column="CRON_EXPRESSION" jdbcType="VARCHAR" property="cronExpression"/>
+        <result column="STATUS" jdbcType="CHAR" property="status"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+
+    <update id="updateBatchByIds">
+        update qrtz_job
+        <set>
+            <if test="job.beanName != null">bean_name = #{job.beanName}</if>
+            <if test="job.methodName != null">method_name = #{job.methodName}</if>
+            <if test="job.params != null">params = #{job.params}</if>
+            <if test="job.cronExpression != null">cron_expression = #{job.cronExpression}</if>
+            <if test="job.status != null">status = #{job.status}</if>
+            <if test="job.remark != null">remark = #{job.remark}</if>
+        </set>
+        where job_id in
+        <foreach collection="ids" item="jobId" open="(" close=")" separator=",">
+            #{jobId}
+        </foreach>
+
+    </update>
+</mapper>
